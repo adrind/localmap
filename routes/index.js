@@ -11,6 +11,7 @@ const INDEED_PUBLISHER_ID = '6870420585336022';
  * Fetches data for Route 45 bus in Anchorage
  */
 function getRouteData() {
+    let data;
     return new Promise(function (resolve, reject) {
         exceltojson({
             input: "/Users/adrienne/workspace/localmap/public/routedata.xlsx",
@@ -20,7 +21,14 @@ function getRouteData() {
             if(err) {
                 reject(err)
             } else {
-                resolve(result);
+                data = result.map((r, i) => {
+                    return {
+                        id: i,
+                        type: 'route',
+                        attributes: r
+                    }
+                });
+                resolve(data);
             }
         });
     });
@@ -123,7 +131,7 @@ router.get('/jobs', function(req, res, next) {
 
 router.get('/routes', function(req, res, next) {
     getRouteData().then((routes) => {
-        res.send({routes: routes})
+        res.send({data: routes})
     });
 });
 
