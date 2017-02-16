@@ -14,5 +14,10 @@
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.2",
     "xlsx-to-json-lc": "^0.2.5"
+  },
+  "devDependencies": {
+    "cheerio": "^0.22.0",
+    "ember-route-action-helper": "2.0.2",
+    "json2xls": "^0.1.2"
   }
 }
