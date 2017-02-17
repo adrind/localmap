@@ -55,7 +55,7 @@ function getIndeedJobs(query) {
                             url: r.url,
                             snippet: r.snippet,
                             'job-key': r.jobKey,
-                            'relative-time': r.formattedRelativeTime
+                            source: 'IND'
                         }
                     }
                 });
@@ -71,7 +71,7 @@ function getIndeedJobs(query) {
  * Possible sources of jobs: US.jobs (DEA), CareerBuilder (AJE), or America's Job Exchange (CB)
  */
 
-function getGovJobs(options) {
+function getGovJobs(options, source) {
     return new Promise(function (resolve, reject) {
         request(options, (err, response, body) => {
             const data = [];
@@ -83,14 +83,15 @@ function getGovJobs(options) {
                     const $tr = $(tr);
 
                     data.push({
-                        type: 'us-gov-job',
+                        type: 'job',
                         id: i,
                         attributes: {
                             'url': $tr.find('[data-title="Job Title"] a').attr('href'),
                             'title': $tr.find('[data-title="Job Title"] a').html(),
                             'company': $tr.find('[data-title="Company"]').html(),
                             'location': $tr.find('[data-title="Location"]').html(),
-                            'date': $tr.find('[data-title="Date Posted"]').html()
+                            'date': $tr.find('[data-title="Date Posted"]').html(),
+                            'source': source
                         }
                     })
                 });
@@ -124,7 +125,7 @@ router.get('/jobs', function(req, res, next) {
         //get jobs from indeed
         getIndeedJobs(keyword).then(renderResponse);
     } else {
-        getGovJobs(options).then(renderResponse);
+        getGovJobs(options, source).then(renderResponse);
     }
 });
 
